@@ -1,0 +1,21 @@
+<!-- 定義本地端註冊帳號發生錯誤時要跳出的flash提醒訊息 -->
+<!-- error -->
+<% if (error != "") { %>
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+  <strong><%= error %></strong>
+</div>
+<% } %>
+
+<!-- 如果有error_msg, alert!-->
+<% if (error_msg != "") { %>
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+  <strong><%= error_msg %></strong>
+</div>
+<% } %>
+
+<!--如果success_msg, alert!-->
+<% if (success_msg != "") { %>
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+  <strong><%= success_msg %></strong>
+</div>
+<% } %>
