@@ -28,7 +28,7 @@ router.get(
   "/google",
   //第二個參數設定middleware用passport物件來做驗證
   /*
-  當執行passport.authenticate("google")時 會去找auth的登入strategy(以google為例,寫在./config/passTemp.js裡) 
+  當執行passport.authenticate("google")時 會去找auth的登入strategy(以google為例,寫在../config/passTemp.js裡) 
   passport.authenticate("要使用的auth", {
     scope: ["profile, email"], <= 要從auth 裡面resource server拿到的東西
     prompt: "select_account", <=加入這個prompt代表可以在頁面有多個不同email帳戶選擇
@@ -82,9 +82,9 @@ router.post(
   }
 );
 
-//記得加passport.authenticate("google")這個middleware 代表必要經過這個google驗證後,才能跳轉到此頁面
+//設定通過google驗證後,要導向的頁面,記得加passport.authenticate("google")這個middleware 代表必要經過這個google驗證後,才能跳轉到此頁面
 router.get("/google/redirect", passport.authenticate("google"), (req, res) => {
-  console.log("step into redirect 區域");
+  console.log("step into redirect area");
   return res.redirect("/profile");
 });
 

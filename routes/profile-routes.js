@@ -12,16 +12,17 @@ const authCheck = (req, res, next) => {
 router.get("/", authCheck, async (req, res) => {
   console.log(" enter /profile");
   let postFound = await Post.find({ auther: req.user._id });
+  //console.log(postFound);
   try {
-    if (!postFound) {
-      req.flash("error_msg", "no post found, pls add new post");
-      return res.redirect("/post");
+    if (postFound.length === 0) {
+      req.flash("error_msg", "pls add your first post! Let people know you~");
+      return res.redirect("/profile/post");
     } else {
       return res.render("profile", { user: req.user, posts: postFound }); //因為deserializUser()當中的done已設定req.user = 去資料庫依_id找到的使用者資料
     }
   } catch (e) {
     req.flash("error_msg", "no post found, pls add new post");
-    return res.redirect("/post");
+    return res.redirect("/profile/post");
   }
 });
 

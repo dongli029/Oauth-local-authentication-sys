@@ -3,8 +3,8 @@
 const passport = require("passport"); //驗證套件
 const GoogleStrategy = require("passport-google-oauth20"); //google auth 套件(一個class)
 const User = require("../models/user-model");
-const LocalSrategy = require("passport-local"); // 驗證本地登入套件
-const bcrypt = require("bcrypt");
+const LocalStrategy = require("passport-local"); // 驗證本地登入套件
+const bcrypt = require("bcrypt"); //password add salt
 
 /*
 序列化使用者, 這裡的user參數 = GoogleStrategy裡的done函數的第二個參數
@@ -12,7 +12,7 @@ const bcrypt = require("bcrypt");
 會將此done(參數)的第二參數值放入session, 並在用戶端瀏覽器設定cookie
 serializeUser((user, done) 用處就是將使用者資料加密後存到session然後簽名後以cookie回傳給使用者端*/
 passport.serializeUser((user, done) => {
-  console.log("序列化使用者。。。, user");
+  console.log(`序列化使用者。。。, ${user}`);
   /*
 user._id = foundUser._id <= 將mongoDB中的_id存在session中
 並且將id簽名後,以cookie形式回傳給用戶端瀏覽器
@@ -57,7 +57,7 @@ passport.use(
         let foundUser = await User.findOne({ googleID: profile.id }).exec();
         if (foundUser) {
           console.log("people already registered");
-          //console.log(foundUser);
+          console.log(foundUser);
           /*
           執行done函數會自動執行passport.serializeUser() <-將id轉成bytes儲存
           第一個參數null是默認規定的, 第二個參數(foundUser)會被
@@ -85,13 +85,13 @@ passport.use(
 
 //login.ejs中屬性name="username", name="password" 一定要設定成左述這樣, 才能被成功套到這邊
 passport.use(
-  new LocalSrategy(async (username, password, done) => {
+  new LocalStrategy(async (username, password, done) => {
     let foundUser = await User.findOne({ email: username });
     if (foundUser) {
       //找到相符使用者後, 比對使用者輸入密碼(password)與資料庫內儲存密碼(foundUser.password)是否相符
       let result = await bcrypt.compare(password, foundUser.password);
       if (result) {
-        done(null, foundUser); //驗證成功後,將foundUser當成參數執行serializeUser(),serializeUser()動作       }
+        done(null, foundUser); //驗證成功後,將foundUser當成參數執行serializeUser(),deserializeUser()動作
       } else {
         done(null, false); // 若驗證失敗執行done函式,只要設定成false代表沒有被驗證成功
       }
